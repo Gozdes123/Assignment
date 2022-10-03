@@ -44,17 +44,27 @@
       ></span>
     </th>
   </tr>
-  <div v-for="(datas, index) in paginatedData" :key="index">
-    <tr>
-      <th class="second">{{ datas.mission_name }}</th>
-      <th class="second">{{ datas.rocket.rocket_name }}</th>
-      <th class="second">{{ datas.rocket.rocket_type }}</th>
-      <th class="second">{{ datas.launch_date_local.slice(0, 10) }}</th>
-    </tr>
+  <div>
+    <div v-for="(datas, index) in paginatedData" :key="index">
+      <tr>
+        <th class="second">{{ datas.mission_name }}</th>
+        <th class="second">{{ datas.rocket.rocket_name }}</th>
+        <th class="second">{{ datas.rocket.rocket_type }}</th>
+        <th class="second">
+          {{ datas.launch_date_local.slice(0, 10).replace(/-/g, "/") }}
+        </th>
+      </tr>
+    </div>
   </div>
   <button @click="prepage()">上一頁</button>
   <button @click="nextpage()">下一頁</button>
-  <button @click="clicked()">測適用</button>
+  <input
+    type="search"
+    v-model.lazy.trim="keyWord"
+    placeholder="請輸入要查詢的東西"
+  />
+  <button @click="search()">搜尋</button>
+  <button @click="clicked()">按我喔吼吼</button>
 </template>
 
 <script>
@@ -64,11 +74,13 @@ export default {
     return {
       zero: 0,
       per: 20,
+      keyWord: "",
+      newarray: [],
     };
   },
   methods: {
     clicked() {
-      console.log();
+      console.log(this.data.launches[0].launch_date_local);
     },
     prepage() {
       if (this.zero <= 0) {
@@ -85,7 +97,7 @@ export default {
       }
     },
     MissionsortList() {
-      return this.data.launches.sort((a, b) => {
+      this.data.launches.sort((a, b) => {
         return a["mission_name"].localeCompare(b["mission_name"]);
       });
     },
@@ -95,34 +107,43 @@ export default {
       });
     },
     RocketsortList() {
-      return this.data.launches.sort((a, b) => {
-        a.rocket.rocket_name.charCodeAt(0) - b.rocket.rocket_name.charCodeAt(0);
+      this.data.launches.sort((a, b) => {
+        return a.rocket.rocket_name.localeCompare(b.rocket.rocket_name);
       });
     },
     RocketzsortList() {
-      return this.data.launches.sort((a, b) => {
-        a.rocket.rocket_name.charCodeAt(0) - b.rocket.rocket_name.charCodeAt(0);
+      this.data.launches.sort((a, b) => {
+        return b.rocket.rocket_name.localeCompare(a.rocket.rocket_name);
       });
     },
     RocketTypesortList() {
-      return this.data.launches.sort((a, b) => {
-        a.rocket.rocket_type.charCodeAt(0) - b.rocket.rocket_type.charCodeAt(0);
+      this.data.launches.sort((a, b) => {
+        return a.rocket.rocket_type.localeCompare(b.rocket.rocket_type);
       });
     },
     RocketTypezsortList() {
-      return this.data.launches.sort((a, b) => {
-        return b[".rocket.rocket_type"].localeCompare(a["rocket_type"]);
+      this.data.launches.sort((a, b) => {
+        return b.rocket.rocket_type.localeCompare(a.rocket.rocket_type);
       });
     },
     DatesortList() {
-      return this.data.launches.sort((a, b) => {
-        return b["launch_date_local"].localeCompare(a["launch_date_local"]);
+      this.data.launches.sort((a, b) => {
+        return a["launch_date_local"].localeCompare(b["launch_date_local"]);
       });
     },
     DatezsortList() {
-      return this.data.launches.sort((a, b) => {
+      this.data.launches.sort((a, b) => {
         return b["launch_date_local"].localeCompare(a["launch_date_local"]);
       });
+    },
+    search() {
+      this.data.launches = this.data.launches.filter(
+        (searchResult) =>
+          searchResult.launch_date_local.includes(this.keyWord) ||
+          searchResult.rocket.rocket_type.includes(this.keyWord) ||
+          searchResult.rocket.rocket_name.includes(this.keyWord) ||
+          searchResult.mission_name.includes(this.keyWord)
+      );
     },
   },
   computed: {
