@@ -45,7 +45,7 @@
     </th>
   </tr>
   <div>
-    <div v-for="(datas, index) in paginatedData" :key="index">
+    <div v-for="(datas, index) in PaginatedData" :key="index">
       <tr>
         <th class="second">{{ datas.mission_name }}</th>
         <th class="second">{{ datas.rocket.rocket_name }}</th>
@@ -56,15 +56,29 @@
       </tr>
     </div>
   </div>
-  <button @click="prepage()">上一頁</button>
-  <button @click="nextpage()">下一頁</button>
-  <input
-    type="search"
-    v-model.lazy.trim="keyWord"
-    placeholder="請輸入要查詢的東西"
-  />
-  <button @click="search()">搜尋</button>
-  <button @click="reset()">Reset</button>
+  <div class="pagebuttonbar">
+    <button @click="PrePage()" class="prebutton">上一頁</button>
+    <button
+      v-for="(page, index) in TotalPage"
+      :key="index"
+      :style="{ backgroundColor: index == this.zero ? '#fcaa3f' : 'white' }"
+      class="pagebutton"
+      @click="ClickPage(index)"
+    >
+      {{ index + 1 }}
+    </button>
+    <button @click="NextPage()" class="nextbutton">下一頁</button>
+  </div>
+  <div class="searchbar">
+    <input
+      type="search"
+      v-model.lazy.trim="keyWord"
+      placeholder="請輸入要查詢的東西"
+      class="inputext"
+    />
+    <button @click="search()" class="searchbutton">搜尋</button>
+    <button @click="reset()" class="resetbutton">Reset</button>
+  </div>
 </template>
 
 <script>
@@ -90,15 +104,19 @@ export default {
     reset() {
       this.newarray = this.data.launches;
       this.keyWord = "";
+      this.zero = 0;
     },
-    prepage() {
+    PrePage() {
       if (this.zero <= 0) {
         this.zero = 0;
       } else {
         this.zero--;
       }
     },
-    nextpage() {
+    ClickPage(num) {
+      this.zero = num;
+    },
+    NextPage() {
       if (this.zero >= Math.floor(this.newarray.length / this.per)) {
         this.zero = Math.floor(this.newarray.length / this.per);
       } else {
@@ -162,10 +180,13 @@ export default {
   },
   computed: {
     ...mapState(["data"]),
-    paginatedData() {
+    PaginatedData() {
       let start = this.zero * 20;
       let end = start + 20;
       return this.newarray.slice(start, end);
+    },
+    TotalPage() {
+      return Math.ceil(this.newarray.length / this.per);
     },
   },
 };
@@ -173,7 +194,7 @@ export default {
 
 <style>
 .main {
-  background-color: #009fcc;
+  background-color: #61daf8;
   padding: 10px;
   border: 1px solid #000;
   color: #fff;
@@ -188,5 +209,38 @@ export default {
 td {
   border: 1px solid #000;
   padding: 5px;
+}
+.pagebuttonbar {
+  text-align: center;
+  margin-top: 10px;
+}
+.pagebutton {
+  width: 100px;
+  height: 50px;
+}
+.nextbutton {
+  width: 100px;
+  height: 50px;
+}
+.prebutton {
+  width: 100px;
+  height: 50px;
+}
+.inputext {
+  width: 400px;
+  height: 30px;
+}
+.searchbar {
+  text-align: center;
+  margin-top: 10px;
+}
+.searchbutton {
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+}
+.resetbutton {
+  width: 100px;
+  height: 50px;
 }
 </style>
