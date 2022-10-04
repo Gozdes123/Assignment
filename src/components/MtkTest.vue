@@ -51,7 +51,7 @@
         <th class="second">{{ datas.rocket.rocket_name }}</th>
         <th class="second">{{ datas.rocket.rocket_type }}</th>
         <th class="second">
-          {{ datas.launch_date_local.slice(0, 10).replace(/-/g, "/") }}
+          {{ datas.launch_date_local }}
         </th>
       </tr>
     </div>
@@ -64,12 +64,20 @@
     placeholder="請輸入要查詢的東西"
   />
   <button @click="search()">搜尋</button>
-  <button @click="clicked()">按我喔吼吼</button>
+  <button @click="reset()">Reset</button>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
+  created() {
+    this.data.launches.map(function (array) {
+      array.launch_date_local = array.launch_date_local
+        .slice(0, 10)
+        .replace(/-/g, "/");
+    });
+    this.newarray = this.data.launches;
+  },
   data() {
     return {
       zero: 0,
@@ -79,8 +87,9 @@ export default {
     };
   },
   methods: {
-    clicked() {
-      console.log(this.data.launches[0].launch_date_local);
+    reset() {
+      this.newarray = this.data.launches;
+      this.keyWord = "";
     },
     prepage() {
       if (this.zero <= 0) {
@@ -90,60 +99,65 @@ export default {
       }
     },
     nextpage() {
-      if (this.zero >= Math.floor(this.data.launches.length / this.per)) {
-        this.zero = Math.floor(this.data.launches.length / this.per);
+      if (this.zero >= Math.floor(this.newarray.length / this.per)) {
+        this.zero = Math.floor(this.newarray.length / this.per);
       } else {
         this.zero++;
       }
     },
     MissionsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return a["mission_name"].localeCompare(b["mission_name"]);
       });
     },
     MissionzsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return b["mission_name"].localeCompare(a["mission_name"]);
       });
     },
     RocketsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return a.rocket.rocket_name.localeCompare(b.rocket.rocket_name);
       });
     },
     RocketzsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return b.rocket.rocket_name.localeCompare(a.rocket.rocket_name);
       });
     },
     RocketTypesortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return a.rocket.rocket_type.localeCompare(b.rocket.rocket_type);
       });
     },
     RocketTypezsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return b.rocket.rocket_type.localeCompare(a.rocket.rocket_type);
       });
     },
     DatesortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return a["launch_date_local"].localeCompare(b["launch_date_local"]);
       });
     },
     DatezsortList() {
-      this.data.launches.sort((a, b) => {
+      this.newarray.sort((a, b) => {
         return b["launch_date_local"].localeCompare(a["launch_date_local"]);
       });
     },
     search() {
-      this.data.launches = this.data.launches.filter(
-        (searchResult) =>
-          searchResult.launch_date_local.includes(this.keyWord) ||
-          searchResult.rocket.rocket_type.includes(this.keyWord) ||
-          searchResult.rocket.rocket_name.includes(this.keyWord) ||
-          searchResult.mission_name.includes(this.keyWord)
-      );
+      if (this.keyWord !== "") {
+        this.newarray = this.data.launches.filter(
+          (searchResult) =>
+            searchResult.launch_date_local.includes(this.keyWord) ||
+            searchResult.rocket.rocket_type.includes(this.keyWord) ||
+            searchResult.rocket.rocket_name.includes(this.keyWord) ||
+            searchResult.mission_name.includes(this.keyWord)
+        );
+        this.zero = 0;
+      } else {
+        this.newarray = this.data.launches;
+      }
     },
   },
   computed: {
@@ -151,7 +165,7 @@ export default {
     paginatedData() {
       let start = this.zero * 20;
       let end = start + 20;
-      return this.data.launches.slice(start, end);
+      return this.newarray.slice(start, end);
     },
   },
 };
