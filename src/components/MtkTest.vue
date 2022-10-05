@@ -224,6 +224,7 @@ export default {
           this.time.replace(/-/g, "/")
         );
       });
+      this.zero = 0;
     },
   },
   computed: {
