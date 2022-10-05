@@ -1,4 +1,18 @@
 <template>
+  <div class="searchbar">
+    <input
+      type="search"
+      v-model.lazy.trim="keyWord"
+      placeholder="請輸入要查詢的東西"
+      class="inputext"
+    />
+    <button @click="search()" class="searchbutton">搜尋</button>
+    <button @click="refresh()" class="refreshbutton">重整</button>
+    <date-picker v-model:value="time0" class="time"></date-picker>
+    <button @click="DateSearch()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
   <tr>
     <th class="main">
       <span class="up"
@@ -69,20 +83,7 @@
     </button>
     <button @click="NextPage()" class="nextbutton">下一頁</button>
   </div>
-  <div class="searchbar">
-    <input
-      type="search"
-      v-model.lazy.trim="keyWord"
-      placeholder="請輸入要查詢的東西"
-      class="inputext"
-    />
-    <button @click="search()" class="searchbutton">搜尋</button>
-    <button @click="reset()" class="resetbutton">Reset</button>
-    <date-picker v-model:value="time0"></date-picker>
-    <button @click="DateSearch()">按我搜尋時間</button>
-  </div>
 </template>
-
 <script>
 import DatePicker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
@@ -100,7 +101,9 @@ export default {
           );
         });
         this.newarray = response;
-        this.newarray2 = response;
+        this.newarray2 = response.map((array) => {
+          return array;
+        });
       })
       .catch((error) => {
         console.log("沒接到資料" + error);
@@ -119,11 +122,11 @@ export default {
     };
   },
   methods: {
-    reset() {
-      // this.newarray = this.newarray2;
-      // this.keyWord = "";
-      // this.zero = 0;
-      window.location.reload();
+    refresh() {
+      this.newarray = this.newarray2;
+      this.keyWord = "";
+      this.zero = 0;
+      this.time0 = null;
     },
     PrePage() {
       if (this.zero <= 0) {
@@ -186,12 +189,16 @@ export default {
     },
     DatesortList() {
       this.newarray.sort((a, b) => {
-        return b.launch_date_local.localeCompare(a.launch_date_local);
+        let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
+        let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
+        return newa < newb ? 1 : -1;
       });
     },
     DatezsortList() {
       this.newarray.sort((a, b) => {
-        return a.launch_date_local.localeCompare(b.launch_date_local);
+        let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
+        let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
+        return newb < newa ? 1 : -1;
       });
     },
     search() {
@@ -287,8 +294,14 @@ td {
   height: 50px;
   margin: 10px;
 }
-.resetbutton {
+.clearbutton {
   width: 100px;
   height: 50px;
+}
+.refreshbutton {
+  width: 100px;
+  height: 50px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 </style>
