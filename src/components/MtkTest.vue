@@ -82,16 +82,25 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import dayjs from "dayjs";
 export default {
   created() {
-    this.data.launches.map(function (array) {
-      array.launch_date_local = dayjs(array.launch_date_local).format(
-        "YYYY/MM/DD"
-      );
-    });
-    this.newarray = this.data.launches;
+    fetch("https://api.spacex.land/rest/launches")
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        response.map(function (array) {
+          array.launch_date_local = dayjs(array.launch_date_local).format(
+            "YYYY/MM/DD"
+          );
+        });
+        this.newarray = response;
+        this.newarray2 = response;
+      })
+      .catch((error) => {
+        console.log("沒接到資料" + error);
+      });
   },
   data() {
     return {
@@ -99,13 +108,15 @@ export default {
       per: 20,
       keyWord: "",
       newarray: [],
+      newarray2: [],
     };
   },
   methods: {
     reset() {
-      this.newarray = this.data.launches;
-      this.keyWord = "";
-      this.zero = 0;
+      // this.newarray = this.newarray2;
+      // this.keyWord = "";
+      // this.zero = 0;
+      window.location.reload();
     },
     PrePage() {
       if (this.zero <= 0) {
@@ -178,7 +189,7 @@ export default {
     },
     search() {
       if (this.keyWord !== "") {
-        this.newarray = this.data.launches.filter(
+        this.newarray = this.newarray2.filter(
           (searchResult) =>
             searchResult.launch_date_local.includes(this.keyWord) ||
             searchResult.launch_date_local.includes(
@@ -196,12 +207,11 @@ export default {
         );
         this.zero = 0;
       } else {
-        this.newarray = this.data.launches;
+        this.newarray = this.newarray2;
       }
     },
   },
   computed: {
-    ...mapState(["data"]),
     PaginatedData() {
       let start = this.zero * 20;
       let end = start + 20;
