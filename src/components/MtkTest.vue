@@ -78,10 +78,14 @@
     />
     <button @click="search()" class="searchbutton">搜尋</button>
     <button @click="reset()" class="resetbutton">Reset</button>
+    <date-picker v-model:value="time0"></date-picker>
+    <button @click="DateSearch()">按我搜尋時間</button>
   </div>
 </template>
 
 <script>
+import DatePicker from "vue-datepicker-next";
+import "vue-datepicker-next/index.css";
 import dayjs from "dayjs";
 export default {
   created() {
@@ -102,6 +106,7 @@ export default {
         console.log("沒接到資料" + error);
       });
   },
+  components: { DatePicker },
   data() {
     return {
       zero: 0,
@@ -109,6 +114,8 @@ export default {
       keyWord: "",
       newarray: [],
       newarray2: [],
+      time0: null,
+      time: null,
     };
   },
   methods: {
@@ -209,6 +216,14 @@ export default {
       } else {
         this.newarray = this.newarray2;
       }
+    },
+    DateSearch() {
+      this.time = dayjs(this.time0).format("YYYY/MM/DD");
+      this.newarray = this.newarray2.filter((searchResult) => {
+        return searchResult.launch_date_local.includes(
+          this.time.replace(/-/g, "/")
+        );
+      });
     },
   },
   computed: {
