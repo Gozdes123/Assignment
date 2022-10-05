@@ -83,12 +83,13 @@
 
 <script>
 import { mapState } from "vuex";
+import dayjs from "dayjs";
 export default {
   created() {
     this.data.launches.map(function (array) {
-      array.launch_date_local = array.launch_date_local
-        .slice(0, 10)
-        .replace(/-/g, "/");
+      array.launch_date_local = dayjs(array.launch_date_local).format(
+        "YYYY/MM/DD"
+      );
     });
     this.newarray = this.data.launches;
   },
@@ -125,42 +126,54 @@ export default {
     },
     MissionsortList() {
       this.newarray.sort((a, b) => {
-        return a["mission_name"].localeCompare(b["mission_name"]);
+        return a.mission_name.localeCompare(b.mission_name, "en", {
+          numeric: true,
+        });
       });
     },
     MissionzsortList() {
       this.newarray.sort((a, b) => {
-        return b["mission_name"].localeCompare(a["mission_name"]);
+        return b.mission_name.localeCompare(a.mission_name, "en", {
+          numeric: true,
+        });
       });
     },
     RocketsortList() {
       this.newarray.sort((a, b) => {
-        return a.rocket.rocket_name.localeCompare(b.rocket.rocket_name);
+        return a.rocket.rocket_name.localeCompare(b.rocket.rocket_name, "en", {
+          numeric: true,
+        });
       });
     },
     RocketzsortList() {
       this.newarray.sort((a, b) => {
-        return b.rocket.rocket_name.localeCompare(a.rocket.rocket_name);
+        return b.rocket.rocket_name.localeCompare(a.rocket.rocket_name, "en", {
+          numeric: true,
+        });
       });
     },
     RocketTypesortList() {
       this.newarray.sort((a, b) => {
-        return a.rocket.rocket_type.localeCompare(b.rocket.rocket_type);
+        return a.rocket.rocket_type.localeCompare(b.rocket.rocket_type, "en", {
+          numeric: true,
+        });
       });
     },
     RocketTypezsortList() {
       this.newarray.sort((a, b) => {
-        return b.rocket.rocket_type.localeCompare(a.rocket.rocket_type);
+        return b.rocket.rocket_type.localeCompare(a.rocket.rocket_type, "en", {
+          numeric: true,
+        });
       });
     },
     DatesortList() {
       this.newarray.sort((a, b) => {
-        return a["launch_date_local"].localeCompare(b["launch_date_local"]);
+        return b.launch_date_local.localeCompare(a.launch_date_local);
       });
     },
     DatezsortList() {
       this.newarray.sort((a, b) => {
-        return b["launch_date_local"].localeCompare(a["launch_date_local"]);
+        return a.launch_date_local.localeCompare(b.launch_date_local);
       });
     },
     search() {
@@ -168,9 +181,18 @@ export default {
         this.newarray = this.data.launches.filter(
           (searchResult) =>
             searchResult.launch_date_local.includes(this.keyWord) ||
-            searchResult.rocket.rocket_type.includes(this.keyWord) ||
-            searchResult.rocket.rocket_name.includes(this.keyWord) ||
-            searchResult.mission_name.includes(this.keyWord)
+            searchResult.launch_date_local.includes(
+              this.keyWord.replace(/-/g, "/")
+            ) ||
+            searchResult.rocket.rocket_type
+              .toUpperCase()
+              .includes(this.keyWord.toUpperCase()) ||
+            searchResult.rocket.rocket_name
+              .toUpperCase()
+              .includes(this.keyWord.toUpperCase()) ||
+            searchResult.mission_name
+              .toUpperCase()
+              .includes(this.keyWord.toUpperCase())
         );
         this.zero = 0;
       } else {
