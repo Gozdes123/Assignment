@@ -5,70 +5,69 @@
       v-model.lazy.trim="keyWord"
       placeholder="請輸入要查詢的東西"
       class="inputext"
+      @keyup.enter="search()"
     />
     <button @click="search()" class="searchbutton">搜尋</button>
     <button @click="refresh()" class="refreshbutton">重整</button>
-    <date-picker v-model:value="time0" class="time"></date-picker>
+    <date-picker
+      v-model:value="timetarget"
+      class="time"
+      @keyup.enter="DateSearch()"
+    ></date-picker>
     <button @click="DateSearch()">
       <i class="fa-solid fa-magnifying-glass"></i>
     </button>
   </div>
-  <tr>
-    <th class="main">
+  <div class="mainbox">
+    <div class="main">
       <span class="up"
-        ><button @click="MissionsortList()">
+        ><button @click="MissionSortList(datekeyup)">
           <i class="fa-solid fa-angles-up up"></i></button></span
       >Mission Name
       <span class="down"
-        ><button @click="MissionzsortList()">
+        ><button @click="MissionSortList(datekeydown)">
           <i class="fa-solid fa-angles-down down"></i></button
       ></span>
-    </th>
-    <th class="main">
+    </div>
+    <div class="main">
       <span class="up"
-        ><button @click="RocketsortList()">
+        ><button @click="RocketSortList(datekeyup)">
           <i class="fa-solid fa-angles-up up"></i></button
       ></span>
       Rocket Name
       <span class="down"
-        ><button @click="RocketzsortList()">
+        ><button @click="RocketSortList(datekeydown)">
           <i class="fa-solid fa-angles-down down"></i></button
       ></span>
-    </th>
-    <th class="main">
+    </div>
+    <div class="main">
       <span class="up"
-        ><button @click="RocketTypesortList()">
+        ><button @click="RocketTypeSortList(datekeyup)">
           <i class="fa-solid fa-angles-up up"></i></button
       ></span>
       Rocket Type
       <span class="down"
-        ><button @click="RocketTypezsortList()">
+        ><button @click="RocketTypeSortList(datekeydown)">
           <i class="fa-solid fa-angles-down down"></i></button
       ></span>
-    </th>
-    <th class="main">
+    </div>
+    <div class="main">
       <span class="up"
-        ><button @click="DatesortList()">
+        ><button @click="DateSortList(datekeydown)">
           <i class="fa-solid fa-angles-up up"></i></button
       ></span>
       Launch Date
       <span class="down"
-        ><button @click="DatezsortList()">
+        ><button @click="DateSortList(datekeyup)">
           <i class="fa-solid fa-angles-down down"></i></button
       ></span>
-    </th>
-  </tr>
-  <div>
-    <div v-for="(datas, index) in PaginatedData" :key="index">
-      <tr>
-        <th class="second">{{ datas.mission_name }}</th>
-        <th class="second">{{ datas.rocket.rocket_name }}</th>
-        <th class="second">{{ datas.rocket.rocket_type }}</th>
-        <th class="second">
-          {{ datas.launch_date_local }}
-        </th>
-      </tr>
     </div>
+  </div>
+  <div v-for="(datas, index) in PaginatedData" :key="index" class="box2">
+    <div class="second">{{ datas.mission_name }}</div>
+    <div class="second">{{ datas.rocket.rocket_name }}</div>
+    <div class="second">{{ datas.rocket.rocket_type }}</div>
+    <div class="second">{{ datas.launch_date_local }}</div>
   </div>
   <div class="pagebuttonbar">
     <button @click="PrePage()" class="prebutton">上一頁</button>
@@ -101,9 +100,7 @@ export default {
           );
         });
         this.newarray = response;
-        this.newarray2 = response.map((array) => {
-          return array;
-        });
+        this.newarray2 = JSON.parse(JSON.stringify(response));
       })
       .catch((error) => {
         console.log("沒接到資料" + error);
@@ -115,18 +112,22 @@ export default {
       zero: 0,
       per: 20,
       keyWord: "",
+      datekeyup: "up",
+      datekeydown: "down",
       newarray: [],
       newarray2: [],
-      time0: null,
+      timetarget: null,
       time: null,
     };
   },
   methods: {
     refresh() {
-      this.newarray = this.newarray2;
+      this.newarray = this.newarray2.map((array) => {
+        return array;
+      });
       this.keyWord = "";
       this.zero = 0;
-      this.time0 = null;
+      this.timetarget = null;
     },
     PrePage() {
       if (this.zero <= 0) {
@@ -145,61 +146,81 @@ export default {
         this.zero++;
       }
     },
-    MissionsortList() {
-      this.newarray.sort((a, b) => {
-        return a.mission_name.localeCompare(b.mission_name, "en", {
-          numeric: true,
+    MissionSortList(key) {
+      if (key == "up") {
+        this.newarray.sort((a, b) => {
+          return a.mission_name.localeCompare(b.mission_name, "en", {
+            numeric: true,
+          });
         });
-      });
-    },
-    MissionzsortList() {
-      this.newarray.sort((a, b) => {
-        return b.mission_name.localeCompare(a.mission_name, "en", {
-          numeric: true,
+      } else if (key == "down") {
+        this.newarray.sort((a, b) => {
+          return b.mission_name.localeCompare(a.mission_name, "en", {
+            numeric: true,
+          });
         });
-      });
+      }
     },
-    RocketsortList() {
-      this.newarray.sort((a, b) => {
-        return a.rocket.rocket_name.localeCompare(b.rocket.rocket_name, "en", {
-          numeric: true,
+    RocketSortList(key) {
+      if (key == "up") {
+        this.newarray.sort((a, b) => {
+          return a.rocket.rocket_name.localeCompare(
+            b.rocket.rocket_name,
+            "en",
+            {
+              numeric: true,
+            }
+          );
         });
-      });
-    },
-    RocketzsortList() {
-      this.newarray.sort((a, b) => {
-        return b.rocket.rocket_name.localeCompare(a.rocket.rocket_name, "en", {
-          numeric: true,
+      } else if (key == "down") {
+        this.newarray.sort((a, b) => {
+          return b.rocket.rocket_name.localeCompare(
+            a.rocket.rocket_name,
+            "en",
+            {
+              numeric: true,
+            }
+          );
         });
-      });
+      }
     },
-    RocketTypesortList() {
-      this.newarray.sort((a, b) => {
-        return a.rocket.rocket_type.localeCompare(b.rocket.rocket_type, "en", {
-          numeric: true,
+    RocketTypeSortList(key) {
+      if (key == "up") {
+        this.newarray.sort((a, b) => {
+          return a.rocket.rocket_type.localeCompare(
+            b.rocket.rocket_type,
+            "en",
+            {
+              numeric: true,
+            }
+          );
         });
-      });
-    },
-    RocketTypezsortList() {
-      this.newarray.sort((a, b) => {
-        return b.rocket.rocket_type.localeCompare(a.rocket.rocket_type, "en", {
-          numeric: true,
+      } else if (key == "down") {
+        this.newarray.sort((a, b) => {
+          return b.rocket.rocket_type.localeCompare(
+            a.rocket.rocket_type,
+            "en",
+            {
+              numeric: true,
+            }
+          );
         });
-      });
+      }
     },
-    DatesortList() {
-      this.newarray.sort((a, b) => {
-        let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
-        let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
-        return newa < newb ? 1 : -1;
-      });
-    },
-    DatezsortList() {
-      this.newarray.sort((a, b) => {
-        let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
-        let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
-        return newb < newa ? 1 : -1;
-      });
+    DateSortList(key) {
+      if (key == "up") {
+        this.newarray.sort((a, b) => {
+          let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
+          let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
+          return newa < newb ? 1 : -1;
+        });
+      } else if (key == "down") {
+        this.newarray.sort((a, b) => {
+          let newa = dayjs(a.launch_date_local).format("YYYY-MM-DD");
+          let newb = dayjs(b.launch_date_local).format("YYYY-MM-DD");
+          return newb < newa ? 1 : -1;
+        });
+      }
     },
     search() {
       if (this.keyWord !== "") {
@@ -221,15 +242,15 @@ export default {
         );
         this.zero = 0;
       } else {
-        this.newarray = this.newarray2;
+        this.newarray = this.newarray2.map((array) => {
+          return array;
+        });
       }
     },
     DateSearch() {
-      this.time = dayjs(this.time0).format("YYYY/MM/DD");
+      this.time = dayjs(this.timetarget).format("YYYY/MM/DD");
       this.newarray = this.newarray2.filter((searchResult) => {
-        return searchResult.launch_date_local.includes(
-          this.time.replace(/-/g, "/")
-        );
+        return searchResult.launch_date_local.includes(this.time);
       });
       this.zero = 0;
     },
@@ -253,18 +274,20 @@ export default {
   padding: 10px;
   border: 1px solid #000;
   color: #fff;
-  width: 300px;
+  width: 25%;
+  text-align: center;
+}
+.mainbox {
+  display: flex;
 }
 .second {
   padding: 10px;
   border: 1px solid #000;
   color: black;
-  width: 300px;
+  width: 25%;
+  text-align: center;
 }
-td {
-  border: 1px solid #000;
-  padding: 5px;
-}
+
 .pagebuttonbar {
   text-align: center;
   margin-top: 10px;
@@ -284,6 +307,8 @@ td {
 .inputext {
   width: 400px;
   height: 30px;
+  border-radius: 10px 10px 10px 10px;
+  border: 1px solid #000;
 }
 .searchbar {
   text-align: center;
@@ -293,15 +318,17 @@ td {
   width: 100px;
   height: 50px;
   margin: 10px;
+  border-radius: 10px 10px 10px 10px;
 }
-.clearbutton {
-  width: 100px;
-  height: 50px;
-}
+
 .refreshbutton {
   width: 100px;
   height: 50px;
   margin-left: 10px;
   margin-right: 10px;
+  border-radius: 10px 10px 10px 10px;
+}
+.box2 {
+  display: flex;
 }
 </style>
