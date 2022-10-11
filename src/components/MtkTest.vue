@@ -1,86 +1,171 @@
 <template>
-  <div class="searchbar">
+  <div class="text-center mb-[10px] mt-[10px]">
+    <button @click="refresh()" class="">
+      <i
+        class="fa-solid fa-arrows-rotate text-[20px] pr-[20px] text-[#FFD762]"
+      ></i>
+    </button>
     <input
-      type="search"
+      type="text"
       v-model.lazy.trim="keyWord"
       placeholder="請輸入要查詢的東西"
-      class="inputext"
+      class="border-solid border-2 border-[#ccc] rounded-lg"
       @keyup.enter="search()"
     />
-    <button @click="search()" class="searchbutton">搜尋</button>
-    <button @click="refresh()" class="refreshbutton">重整</button>
+    <button @click="search()" class="bg-[#FFD762] rounded-lg ml-[10px]">
+      <p class="text-[white]">
+        <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
+      </p>
+    </button>
     <date-picker
       v-model:value="timetarget"
-      class="time"
+      class="pr-[20px] pl-[20px]"
       @keyup.enter="DateSearch()"
     ></date-picker>
-    <button @click="DateSearch()">
-      <i class="fa-solid fa-magnifying-glass"></i>
+    <button @click="DateSearch()" class="bg-[#FFD762] rounded-lg">
+      <p class="text-[white]">
+        <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
+      </p>
     </button>
   </div>
-  <div class="mainbox">
-    <div class="main">
-      <span class="up"
-        ><button @click="MissionSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i></button></span
-      >Mission Name
-      <span class="down"
-        ><button @click="MissionSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i></button
-      ></span>
-    </div>
-    <div class="main">
-      <span class="up"
-        ><button @click="RocketSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i></button
-      ></span>
-      Rocket Name
-      <span class="down"
-        ><button @click="RocketSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i></button
-      ></span>
-    </div>
-    <div class="main">
-      <span class="up"
-        ><button @click="RocketTypeSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i></button
-      ></span>
-      Rocket Type
-      <span class="down"
-        ><button @click="RocketTypeSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i></button
-      ></span>
-    </div>
-    <div class="main">
-      <span class="up"
-        ><button @click="DateSortList(datekeydown)">
-          <i class="fa-solid fa-angles-up up"></i></button
-      ></span>
-      Launch Date
-      <span class="down"
-        ><button @click="DateSortList(datekeyup)">
-          <i class="fa-solid fa-angles-down down"></i></button
-      ></span>
-    </div>
-  </div>
-  <div v-for="(datas, index) in PaginatedData" :key="index" class="box2">
-    <div class="second">{{ datas.mission_name }}</div>
-    <div class="second">{{ datas.rocket.rocket_name }}</div>
-    <div class="second">{{ datas.rocket.rocket_type }}</div>
-    <div class="second">{{ datas.launch_date_local }}</div>
-  </div>
-  <div class="pagebuttonbar">
-    <button @click="PrePage()" class="prebutton">上一頁</button>
-    <button
-      v-for="(page, index) in TotalPage"
-      :key="index"
-      :style="{ backgroundColor: index == this.zero ? '#fcaa3f' : 'white' }"
-      class="pagebutton"
-      @click="ClickPage(index)"
+  <div class="flex">
+    <div
+      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
     >
-      {{ index + 1 }}
-    </button>
-    <button @click="NextPage()" class="nextbutton">下一頁</button>
+      <div class="w-[33%]">
+        <button @click="MissionSortList(datekeyup)">
+          <i class="fa-solid fa-angles-up up"></i>
+        </button>
+      </div>
+      <div class="w-[33%]">Mission Name</div>
+      <div class="w-[33%]">
+        <button @click="MissionSortList(datekeydown)">
+          <i class="fa-solid fa-angles-down down"></i>
+        </button>
+      </div>
+    </div>
+    <div
+      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+    >
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeyup)">
+          <i class="fa-solid fa-angles-up up"></i>
+        </button>
+      </div>
+      <div class="w-[33%]">Rocket Name</div>
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeydown)">
+          <i class="fa-solid fa-angles-down down"></i>
+        </button>
+      </div>
+    </div>
+    <div
+      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+    >
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeyup)">
+          <i class="fa-solid fa-angles-up up"></i>
+        </button>
+      </div>
+      <div class="w-[33%]">Rocket Type</div>
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeydown)">
+          <i class="fa-solid fa-angles-down down"></i>
+        </button>
+      </div>
+    </div>
+    <div
+      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+    >
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeyup)">
+          <i class="fa-solid fa-angles-up up"></i>
+        </button>
+      </div>
+      <div class="w-[33%]">Launch Date</div>
+      <div class="w-[33%]">
+        <button @click="RocketSortList(datekeydown)">
+          <i class="fa-solid fa-angles-down down"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div v-for="(datas, index) in PaginatedData" :key="index" class="flex">
+    <div
+      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
+    >
+      {{ datas.mission_name }}
+    </div>
+    <div
+      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
+    >
+      {{ datas.rocket.rocket_name }}
+    </div>
+    <div
+      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]bg-[#f9c27bb8] border-[#f9c27bb8]"
+    >
+      {{ datas.rocket.rocket_type }}
+    </div>
+    <div
+      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
+    >
+      {{ datas.launch_date_local }}
+    </div>
+  </div>
+  <div v-if="PaginatedData[19] == null">
+    <div
+      v-for="(div, index) in 20 - PaginatedData.length"
+      :key="index"
+      class="flex"
+    >
+      <div
+        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
+      >
+        &emsp;
+      </div>
+      <div
+        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
+      >
+        &emsp;
+      </div>
+      <div
+        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
+      >
+        &emsp;
+      </div>
+      <div
+        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
+      >
+        &emsp;
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-[20px] flex">
+    <div class="w-[33%]">
+      <button @click="PrePage()">
+        <i class="fa-solid fa-circle-arrow-left text-[20px] text-[#fcaa3f]"></i>
+      </button>
+    </div>
+    <div class="w-[33%]">
+      <button
+        v-for="(page, index) in TotalPage"
+        :key="index"
+        :style="{
+          backgroundColor: index == this.zero ? '#fcaa3f' : '#f9c27b57',
+        }"
+        class="w-1/6 rounded-lg"
+        @click="ClickPage(index)"
+      >
+        {{ index + 1 }}
+      </button>
+    </div>
+    <div class="w-[33%]">
+      <button @click="NextPage()">
+        <i
+          class="fa-solid fa-circle-arrow-right text-[20px] text-[#fcaa3f]"
+        ></i>
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -224,6 +309,7 @@ export default {
     },
     search() {
       if (this.keyWord !== "") {
+        this.timetarget = dayjs(this.timetarget).format("YYYY/MM/DD");
         this.newarray = this.newarray2.filter(
           (searchResult) =>
             searchResult.launch_date_local.includes(this.keyWord) ||
@@ -268,67 +354,4 @@ export default {
 };
 </script>
 
-<style>
-.main {
-  background-color: #61daf8;
-  padding: 10px;
-  border: 1px solid #000;
-  color: #fff;
-  width: 25%;
-  text-align: center;
-}
-.mainbox {
-  display: flex;
-}
-.second {
-  padding: 10px;
-  border: 1px solid #000;
-  color: black;
-  width: 25%;
-  text-align: center;
-}
-
-.pagebuttonbar {
-  text-align: center;
-  margin-top: 10px;
-}
-.pagebutton {
-  width: 100px;
-  height: 50px;
-}
-.nextbutton {
-  width: 100px;
-  height: 50px;
-}
-.prebutton {
-  width: 100px;
-  height: 50px;
-}
-.inputext {
-  width: 400px;
-  height: 30px;
-  border-radius: 10px 10px 10px 10px;
-  border: 1px solid #000;
-}
-.searchbar {
-  text-align: center;
-  margin-top: 10px;
-}
-.searchbutton {
-  width: 100px;
-  height: 50px;
-  margin: 10px;
-  border-radius: 10px 10px 10px 10px;
-}
-
-.refreshbutton {
-  width: 100px;
-  height: 50px;
-  margin-left: 10px;
-  margin-right: 10px;
-  border-radius: 10px 10px 10px 10px;
-}
-.box2 {
-  display: flex;
-}
-</style>
+<style></style>
