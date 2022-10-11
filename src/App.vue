@@ -1,13 +1,12 @@
 <template>
-  <MtkTest></MtkTest>
+  <ForTest></ForTest>
 </template>
 <script>
-// @ is an alias to /src
-import MtkTest from "./components/MtkTest.vue";
+import ForTest from "./components/ForTest.vue";
 
 export default {
   components: {
-    MtkTest,
+    ForTest,
   },
 };
 </script>
