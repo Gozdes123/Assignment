@@ -1,118 +1,127 @@
 <template>
-  <div class="text-center mb-[10px] mt-[10px]">
-    <button @click="refresh()" class="">
-      <i
-        class="fa-solid fa-arrows-rotate text-[20px] pr-[20px] text-[#FFD762]"
-      ></i>
-    </button>
-    <input
-      type="text"
-      v-model.lazy.trim="keyWord"
-      placeholder="請輸入要查詢的東西"
-      class="border-solid border-2 border-[#ccc] rounded-lg"
-      @keyup.enter="search()"
-    />
-    <button @click="search()" class="bg-[#FFD762] rounded-lg ml-[10px]">
-      <p class="text-[white]">
-        <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
-      </p>
-    </button>
-    <date-picker
-      v-model:value="timetarget"
-      class="pr-[20px] pl-[20px]"
-      @keyup.enter="DateSearch()"
-    ></date-picker>
-    <button @click="DateSearch()" class="bg-[#FFD762] rounded-lg">
-      <p class="text-[white]">
-        <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
-      </p>
-    </button>
+  <div class="text-center mb-[10px] mt-[10px] flex">
+    <div class="mt-[4px] sm:mt-0">
+      <button @click="refresh()" class="">
+        <i
+          class="fa-solid fa-arrows-rotate text-[20px] pr-[20px] text-[#FFD762]"
+        ></i>
+      </button>
+      <input
+        type="text"
+        v-model.lazy.trim="keyWord"
+        placeholder="請輸入要查詢的東西"
+        class="border-solid border-2 border-[#ccc] rounded-lg"
+        @keyup.enter="search()"
+      />
+      <button @click="search()" class="bg-[#FFD762] rounded-lg ml-[10px]">
+        <p class="text-[white]">
+          <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
+        </p>
+      </button>
+    </div>
+    <div>
+      <button>&emsp;</button>
+      <date-picker
+        v-model:value="timetarget"
+        class="pr-[20px] pl-[20px]"
+        @keyup.enter="DateSearch()"
+      ></date-picker>
+      <button @click="DateSearch()" class="bg-[#FFD762] rounded-lg">
+        <p class="text-[white]">
+          <i class="fa-solid fa-magnifying-glass"></i>&ensp;搜尋
+        </p>
+      </button>
+    </div>
   </div>
   <div class="flex">
     <div
-      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+      class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
-      <div class="w-[33%]">
+      <div class="w-[20%]">
         <button @click="MissionSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i>
+          <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
-      <div class="w-[33%]">Mission Name</div>
-      <div class="w-[33%]">
+      <div class="w-[60%] text-[10px] sm:text-[16px]">Mission Name</div>
+      <div class="w-[20%]">
         <button @click="MissionSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i>
+          <i
+            class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
+          ></i>
         </button>
       </div>
     </div>
     <div
-      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+      class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
-      <div class="w-[33%]">
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i>
+          <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
-      <div class="w-[33%]">Rocket Name</div>
-      <div class="w-[33%]">
+      <div class="w-[60%] text-[10px] sm:text-[16px]">Rocket Name</div>
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i>
+          <i
+            class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
+          ></i>
         </button>
       </div>
     </div>
     <div
-      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+      class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
-      <div class="w-[33%]">
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i>
+          <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
-      <div class="w-[33%]">Rocket Type</div>
-      <div class="w-[33%]">
+      <div class="w-[60%] text-[10px] sm:text-[16px]">Rocket Type</div>
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i>
+          <i
+            class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
+          ></i>
         </button>
       </div>
     </div>
     <div
-      class="w-[25%] text-center bg-[#FFD762] rounded-full pb-[5px] pt-[5px] flex"
+      class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
-      <div class="w-[33%]">
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeyup)">
-          <i class="fa-solid fa-angles-up up"></i>
+          <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
-      <div class="w-[33%]">Launch Date</div>
-      <div class="w-[33%]">
+      <div class="w-[60%] text-[10px] sm:text-[16px]">Launch Date</div>
+      <div class="w-[20%]">
         <button @click="RocketSortList(datekeydown)">
-          <i class="fa-solid fa-angles-down down"></i>
+          <i
+            class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
+          ></i>
         </button>
       </div>
     </div>
   </div>
-  <div v-for="(datas, index) in PaginatedData" :key="index" class="flex">
-    <div
-      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
-    >
+  <div
+    v-for="(datas, index) in PaginatedData"
+    :key="index"
+    class="flex items-center border-solid border border-[#f9c27bb8]"
+  >
+    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
       {{ datas.mission_name }}
     </div>
-    <div
-      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
-    >
+    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
       {{ datas.rocket.rocket_name }}
     </div>
-    <div
-      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]bg-[#f9c27bb8] border-[#f9c27bb8]"
-    >
+    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
       {{ datas.rocket.rocket_type }}
     </div>
-    <div
-      class="w-[25%] text-center mt-[10px] border-solid border-2 rounded-full bg-[#f9c27bb8] border-[#f9c27bb8]"
-    >
+    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
       {{ datas.launch_date_local }}
     </div>
   </div>
-  <div class="text-center mt-[20px] flex">
+  <div class="text-center mt-[20px] mb-[20px] flex">
     <div class="w-[33%]">
       <button @click="PrePage()">
         <i class="fa-solid fa-circle-arrow-left text-[20px] text-[#fcaa3f]"></i>
@@ -125,7 +134,7 @@
         :style="{
           backgroundColor: index == this.zero ? '#fcaa3f' : '#f9c27b57',
         }"
-        class="w-1/6 rounded-lg"
+        class="w-1/6 rounded-lg border-solid border border-[black]"
         @click="ClickPage(index)"
       >
         {{ index + 1 }}
