@@ -106,7 +106,7 @@
   <div
     v-for="(datas, index) in PaginatedData"
     :key="index"
-    class="flex items-center border-solid border border-[#f9c27bb8]"
+    class="flex items-center border-solid border-2 border-[white] border-b-[#f9c27bb8]"
   >
     <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
       {{ datas.mission_name }}
