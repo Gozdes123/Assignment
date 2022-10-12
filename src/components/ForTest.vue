@@ -112,34 +112,6 @@
       {{ datas.launch_date_local }}
     </div>
   </div>
-  <div v-if="PaginatedData[19] == null">
-    <div
-      v-for="(div, index) in 20 - PaginatedData.length"
-      :key="index"
-      class="flex"
-    >
-      <div
-        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
-      >
-        &emsp;
-      </div>
-      <div
-        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
-      >
-        &emsp;
-      </div>
-      <div
-        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
-      >
-        &emsp;
-      </div>
-      <div
-        class="w-[25%] text-center mt-[10px] border-solid border-2 border-white"
-      >
-        &emsp;
-      </div>
-    </div>
-  </div>
   <div class="text-center mt-[20px] flex">
     <div class="w-[33%]">
       <button @click="PrePage()">
@@ -213,22 +185,28 @@ export default {
       this.keyWord = "";
       this.zero = 0;
       this.timetarget = null;
+      this.GoTop();
     },
     PrePage() {
       if (this.zero <= 0) {
         this.zero = 0;
+        this.GoTop();
       } else {
         this.zero--;
+        this.GoTop();
       }
     },
     ClickPage(num) {
       this.zero = num;
+      this.GoTop();
     },
     NextPage() {
       if (this.zero >= Math.floor(this.newarray.length / this.per)) {
         this.zero = Math.floor(this.newarray.length / this.per);
+        this.GoTop();
       } else {
         this.zero++;
+        this.GoTop();
       }
     },
     MissionSortList(key) {
@@ -339,6 +317,9 @@ export default {
         return searchResult.launch_date_local.includes(this.time);
       });
       this.zero = 0;
+    },
+    GoTop() {
+      document.documentElement.scrollTop = 0;
     },
   },
   computed: {
