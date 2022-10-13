@@ -103,22 +103,27 @@
       </div>
     </div>
   </div>
-  <div
-    v-for="(datas, index) in PaginatedData"
-    :key="index"
-    class="flex items-center border-solid border-2 border-[white] border-b-[#f9c27bb8]"
-  >
-    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
-      {{ datas.mission_name }}
-    </div>
-    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
-      {{ datas.rocket.rocket_name }}
-    </div>
-    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
-      {{ datas.rocket.rocket_type }}
-    </div>
-    <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
-      {{ datas.launch_date_local }}
+  <div v-if="newarray2[0] == null" class="text-center">
+    抓取API資料請稍等..........
+  </div>
+  <div v-else>
+    <div
+      v-for="(datas, index) in PaginatedData"
+      :key="index"
+      class="flex items-center border-solid border-2 border-[white] border-b-[#f9c27bb8]"
+    >
+      <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
+        {{ datas.mission_name }}
+      </div>
+      <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
+        {{ datas.rocket.rocket_name }}
+      </div>
+      <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
+        {{ datas.rocket.rocket_type }}
+      </div>
+      <div class="w-[25%] text-center text-[10px] sm:text-[16px] py-3">
+        {{ datas.launch_date_local }}
+      </div>
     </div>
   </div>
   <div class="text-center mt-[20px] mb-[20px] flex">
