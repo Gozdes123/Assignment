@@ -72,13 +72,13 @@
       class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
       <div class="w-[20%]">
-        <button @click="RocketSortList(datekeyup)">
+        <button @click="RocketTypeSortList(datekeyup)">
           <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
       <div class="w-[60%] text-[10px] sm:text-[16px]">Rocket Type</div>
       <div class="w-[20%]">
-        <button @click="RocketSortList(datekeydown)">
+        <button @click="RocketTypeSortList(datekeydown)">
           <i
             class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
           ></i>
@@ -89,13 +89,13 @@
       class="w-[25%] text-center bg-[#FFD762] border-solid border border-[black] pt-[5px] flex items-center"
     >
       <div class="w-[20%]">
-        <button @click="RocketSortList(datekeyup)">
+        <button @click="DateSortList(datekeydown)">
           <i class="fa-solid fa-angles-up up text-[12px] sm:text-[16px]"></i>
         </button>
       </div>
       <div class="w-[60%] text-[10px] sm:text-[16px]">Launch Date</div>
       <div class="w-[20%]">
-        <button @click="RocketSortList(datekeydown)">
+        <button @click="DateSortList(datekeyup)">
           <i
             class="fa-solid fa-angles-down down text-[12px] sm:text-[16px]"
           ></i>
