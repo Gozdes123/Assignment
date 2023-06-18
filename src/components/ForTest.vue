@@ -160,18 +160,31 @@ import "vue-datepicker-next/index.css";
 import dayjs from "dayjs";
 export default {
   created() {
-    fetch("https://api.spacex.land/rest/launches")
+    const data = {
+      query:
+        "query ($name: String!) {\n  __type(name: $name) {\n   name \n  }\n  launches {\n    mission_name\n    rocket {\n      rocket_name\n      rocket_type\n    }\n    launch_date_local\n  }\n}",
+      variables: {
+        name: "users",
+      },
+    };
+    fetch("https://spacex-production.up.railway.app/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
       .then((response) => {
         return response.json();
       })
       .then((response) => {
-        response.map(function (array) {
+        response.data.launches.map(function (array) {
           array.launch_date_local = dayjs(array.launch_date_local).format(
             "YYYY/MM/DD"
           );
         });
-        this.newarray = response;
-        this.newarray2 = JSON.parse(JSON.stringify(response));
+        this.newarray = response.data.launches;
+        this.newarray2 = JSON.parse(JSON.stringify(response.data.launches));
       })
       .catch((error) => {
         console.log("沒接到資料" + error);
